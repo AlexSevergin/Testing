@@ -9,7 +9,7 @@ import java.util.Properties;
 public class DBManager {
 
     private static DBManager instance;
-    public static final String SETTINGS_FILE = "app.properties";
+    public static final String SETTINGS_FILE = "db.properties";
 
     public static synchronized DBManager getInstance() {
         if (instance == null) {
