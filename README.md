@@ -19,4 +19,4 @@ As a user, you can register and log in. After registration/signing in you will b
 3. Add questions to the test.
 4. Add correct answers to the test.
 
-Note. The result of teh test is % of amount of correct answered questions divided on amount of all questions.
+Note. The result of the test is % of amount of correctly answered questions divided on amount of all questions.
