@@ -13,7 +13,7 @@ As a user, you can register and log in. After registration/signing in you will b
 1. Create/delete/edit tests.
 2. Block/unblock/edit user.
 
-While creating a test, an admin can:
+### While creating a test, an admin can:
 1. Set time for the test.
 2. Set complexity.
 3. Add questions to the test.
