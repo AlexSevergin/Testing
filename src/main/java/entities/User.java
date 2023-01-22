@@ -22,7 +22,7 @@ public class User {
         return id;
     }
 
-    private boolean setLogin(String login) {
+    private void setLogin(String login) {
         this.login = login;
     }
 
@@ -30,7 +30,7 @@ public class User {
         return login;
     }
 
-    private boolean setPassword(String password) {
+    private void setPassword(String password) {
         this.password = password;
     }
 
@@ -38,7 +38,7 @@ public class User {
         return password;
     }
 
-    private boolean setName(String name) {
+    private void setName(String name) {
         this.name = name;
     }
 
@@ -50,7 +50,7 @@ public class User {
         return role;
     }
 
-    private boolean setStatus(String status) {
+    private void setStatus(String status) {
         this.status = status;
     }
 

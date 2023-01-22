@@ -23,70 +23,40 @@ public class Test {
         return id;
     }
 
-    private boolean setName(String name) {
-        if () {
-            this.name = name;
-            return true;
-        }
-        else {
-            return false;
-        }
+    private void setName(String name) {
+        this.name = name;
     }
 
     public String getName() {
         return name;
     }
 
-    private boolean setSubject(String subject) {
-        if () {
-            this.subject = subject;
-            return true;
-        }
-        else {
-            return false;
-        }
+    private void setSubject(String subject) {
+        this.subject = subject;
     }
 
     public String getSubject() {
         return subject;
     }
 
-    private boolean setDifficulty(String difficulty) {
-        if () {
-            this.difficulty = difficulty;
-            return true;
-        }
-        else {
-            return false;
-        }
+    private void setDifficulty(String difficulty) {
+        this.difficulty = difficulty;
     }
 
     public String getDifficulty() {
         return difficulty;
     }
 
-    private boolean setTime(String time) {
-        if () {
-            this.time = time;
-            return true;
-        }
-        else {
-            return false;
-        }
+    private void setTime(String time) {
+        this.time = time;
     }
 
     public String getTime() {
         return time;
     }
 
-    private boolean setQueries(String queries) {
-        if () {
-            this.queries = queries;
-            return true;
-        }
-        else {
-            return false;
-        }
+    private void setQueries(String queries) {
+        this.queries = queries;
     }
 
     public String getQueries() {

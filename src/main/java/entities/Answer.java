@@ -14,13 +14,8 @@ public class Answer {
         return id;
     }
 
-    private boolean setStr(String str) {
-        if() {
-            this.str = str;
-            return true;
-        }
-        else
-            return false;
+    private void setStr(String str) {
+        this.str = str;
     }
 
     public String getStr() {
