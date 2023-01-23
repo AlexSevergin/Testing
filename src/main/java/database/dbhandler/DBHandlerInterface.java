@@ -1,14 +1,16 @@
 package database.dbhandler;
 
-import entities.*
-
+import entities.*;
 import javax.security.auth.login.LoginException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This interface contains all the methods to interact with the database.
+ * @author Oleksandr Severhin
+ */
 public interface DBHandlerInterface {
-
     /**
      * Insert a row in table user
      * @param login

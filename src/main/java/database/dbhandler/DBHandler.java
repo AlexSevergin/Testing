@@ -4,13 +4,14 @@ import database.connection_pool.Pool;
 import entities.*;
 import org.apache.log4j.Logger;
 
+import javax.security.auth.login.LoginException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
 /**
- * This class connects to a database and implements all the methods
+ * This class connects to a database and implements all the methods from DBHandlerInterface.
  * @author Oleksandr Severhin
  */
 public class DBHandler implements DBHandlerInterface {
@@ -37,6 +38,7 @@ public class DBHandler implements DBHandlerInterface {
             LOG.error(e.getMessage());
             e.printStackTrace();
         }
+    }
 
     public static DBHandler getInstance() {
         if (INSTANCE == null)

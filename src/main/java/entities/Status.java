@@ -5,5 +5,13 @@ package entities;
  * @author Oleksandr Sverhin
  */
 public enum Status {
-    ACTIVE, BLOCKED;
+    ACTIVE("active"), BLOCKED("blocked");
+
+    private String status;
+
+    Status(String status){
+        this.status = status;
+    }
+
+    public String getStatus(){ return status;}
 }

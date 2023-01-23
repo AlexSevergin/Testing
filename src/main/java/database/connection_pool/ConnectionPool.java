@@ -5,6 +5,10 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
+/**
+ * This class initializes all the method of the Connection interface.
+ * @author Oleksandr Severhin
+ */
 public class ConnectionPool implements Connection {
     private Connection connection;
     private Pool pool;
