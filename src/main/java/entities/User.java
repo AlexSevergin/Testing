@@ -6,14 +6,14 @@ public class User extends Entity {
     private String password;
     private String name;
     private Role role;
-    private String status;
+    private Status status;
 
     public User(String login, String password, String name, Role role) {
         this.login = login;
         this.password = password;
         this.name = name;
         this.role = role;
-        this.status = "active";
+        this.status = Status.ACTIVE;
     }
 
     public String getLogin() {
@@ -46,11 +46,11 @@ public class User extends Entity {
 
     public void setRole(Role role) { this.role = role; }
 
-    private void setStatus(String status) {
+    private void setStatus(Status status) {
         this.status = status;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return status;
     }
 }

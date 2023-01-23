@@ -15,8 +15,8 @@ import java.util.Locale;
  */
 @WebFilter(filterName = "LanguageFilter")
 public class LocaleFilter implements Filter {
-
     public static final Logger LOG= Logger.getLogger(LocaleFilter.class);
+
     public void destroy() {}
 
     /**
