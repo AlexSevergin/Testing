@@ -1,20 +1,9 @@
 package entities;
 
+/**
+ * This enum contains different roles the user might have.
+ * @author Oleksandr Sverhin
+ */
 public enum Role {
-    STUDENT("Student"),
-    ADMINISTRATOR("Admin");
-
-    private String name;
-
-    private Role(String name) {
-        this.name = name;
-    }
-
-    public Long getId() {
-        return (long) ordinal();
-    }
-
-    public String getName() {
-        return name;
-    }
+    STUDENT, ADMINISTRATOR;
 }
