@@ -1,24 +1,18 @@
 package entities;
 
-public class Answer {
+public class Answer extends Entity {
 
-    private int id;
     private String str;
 
     public Answer(String str) {
-        //this.id =   <--------- method that finds last id
-        this.str = str;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    private void setStr(String str) {
         this.str = str;
     }
 
     public String getStr() {
         return str;
+    }
+
+    private void setStr(String str) {
+        this.str = str;
     }
 }

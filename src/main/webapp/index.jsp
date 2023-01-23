@@ -1,5 +1,17 @@
 <html>
+
+<head>
+    <title> Testing Web App </title>
+</head>
+
 <body>
+
+<div>
+    <tr>How to Use?</tr>
+    <tr>Contacts</tr>
+    <tr>About us</tr>
+    <hr>
+</div>
 
 <form action="/calc" target="_blank" method="post">
     <label for="fname">x:</label><br>

@@ -1,65 +1,57 @@
 package entities;
 
-public class Test {
+public class Test extends Entity {
 
-    private int id;
     private String name;
     private String subject;
-    private String difficulty;
+    private int difficulty;
     private String time;
-    private String queries;
+    private int queries;
 
-    public Test(String name, String subject, String difficulty, String time, String queries) {
-        //this.id =     <------- method that creates id for a Test
-        // exceptions needed
+    public Test(String name, String subject, int difficulty, String time, int queries) {
         this.name = name;
         this.subject = subject;
         this.difficulty = difficulty;
         this.time = time;
         this.queries = queries;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    private void setName(String name) {
-        this.name = name;
     }
 
     public String getName() {
         return name;
     }
 
-    private void setSubject(String subject) {
-        this.subject = subject;
+    private void setName(String name) {
+        this.name = name;
     }
 
     public String getSubject() {
         return subject;
     }
 
-    private void setDifficulty(String difficulty) {
+    private void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public int getDifficulty() {
+        return difficulty;
+    }
+
+    private void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
     }
 
-    public String getDifficulty() {
-        return difficulty;
-    }
+    public String getTime() { return time; }
 
     private void setTime(String time) {
         this.time = time;
     }
 
-    public String getTime() {
-        return time;
+    public int getQueries() {
+        return queries;
     }
 
-    private void setQueries(String queries) {
+    private void setQueries(int queries) {
         this.queries = queries;
     }
 
-    public String getQueries() {
-        return queries;
-    }
 }
