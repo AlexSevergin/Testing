@@ -1,7 +1,7 @@
-package entities;
+package test;
 
-public class Test extends Entity {
-
+public class Test {
+    private int id;
     private String name;
     private String subject;
     private int difficulty;
@@ -14,6 +14,14 @@ public class Test extends Entity {
         this.difficulty = difficulty;
         this.time = time;
         this.queries = queries;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id){
+        this.id = id;
     }
 
     public String getName() {

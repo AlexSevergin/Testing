@@ -1,7 +1,10 @@
-package entities;
+package user;
 
-public class User extends Entity {
+import database.dbhandler.DBHandler;
+import javax.security.auth.login.LoginException;
 
+public class User {
+    private int id;
     private String login;
     private String password;
     private String name;
@@ -14,6 +17,18 @@ public class User extends Entity {
         this.name = name;
         this.role = role;
         this.status = Status.ACTIVE;
+    }
+
+    public User(String login, String password) throws LoginException {
+        return DBHandler.getInstance().logIn(login, password);
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id){
+        this.id = id;
     }
 
     public String getLogin() {

@@ -1,4 +1,4 @@
-package entities;
+package user;
 
 /**
  * This enum contains different status of the user.

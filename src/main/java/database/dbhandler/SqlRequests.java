@@ -1,7 +1,7 @@
 package database.dbhandler;
 
-import entities.Role;
-import entities.Status;
+import user.Role;
+import user.Status;
 
 /**
  * This enum contains all the sql requests to the database.
@@ -16,21 +16,23 @@ public enum SqlRequests {
     UPDATE_USER(),
     GET_USER_BY_LOGIN(),
     GET_USERS(),
-    GET_USERSBYLOGIN(),
-    GET_USERSBYNAME(),
-    GET_USERSBYSTATUS(),
-    GET_USERTESTS(),
-    GET_USERTESTSBYNAME(),
-    GET_USERTESTSBYRESULT(),
+    GET_USERS_BY_LOGIN(),
+    GET_USERS_BY_NAME(),
+    GET_USERS_BY_STATUS(),
+    GET_USER_TESTS(),
+    GET_USER_TESTS_BY_NAME(),
+    GET_USER_TESTS_BY_RESULT(),
     INSERT_TEST(),
     GET_TEST(),
     UPDATE_TEST(),
     INSERT_QUESTION(),
     GET_QUESTION(),
+    GET_QUESTIONS(),
     UPDATE_QUESTION(),
     DELETE_QUESTION(),
     INSERT_ANSWER(),
     GET_ANSWER(),
+    GET_ANSWERS(),
     UPDATE_ANSWER(),
     DELETE_ANSWER(),
     QUESTION_HAS_ANSWER(),

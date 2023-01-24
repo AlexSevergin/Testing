@@ -1,6 +1,12 @@
 package database.dbhandler;
 
-import entities.*;
+import answer.Answer;
+import question.Question;
+import test.Test;
+import user.Role;
+import user.Status;
+import user.User;
+
 import javax.security.auth.login.LoginException;
 import java.sql.SQLException;
 import java.util.List;
@@ -170,6 +176,13 @@ public interface DBHandlerInterface {
     Question getQuestion(String str) throws SQLException;
 
     /**
+     * Get Question from database by a testId given
+     * @param testId
+     * @return List with Questions in the test
+     */
+    List<Question> getQuestions(int testId) throws SQLException;
+
+    /**
      * Updates Question by a String given
      * @param str
      */
@@ -195,6 +208,13 @@ public interface DBHandlerInterface {
      * @return Question with all fields set
      */
     Answer getAnswer(String str) throws SQLException;
+
+    /**
+     * Get List with Answers from database by a questionId given
+     * @param testId
+     * @return List with Answers in the test
+     */
+    List<Answer> getAnswers(int testId) throws SQLException;
 
     /**
      * Updates Answer by a String given

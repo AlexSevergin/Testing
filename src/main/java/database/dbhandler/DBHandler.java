@@ -1,9 +1,13 @@
 package database.dbhandler;
 
+import answer.Answer;
 import database.connection_pool.Pool;
-import entities.*;
 import org.apache.log4j.Logger;
-
+import question.Question;
+import test.Test;
+import user.Role;
+import user.Status;
+import user.User;
 import javax.security.auth.login.LoginException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -136,6 +140,11 @@ public class DBHandler implements DBHandlerInterface {
     }
 
     @Override
+    public List<Question> getQuestions(int testId) throws SQLException {
+        return null;
+    }
+
+    @Override
     public void updateQuestion(String str) throws SQLException {
 
     }
@@ -152,6 +161,11 @@ public class DBHandler implements DBHandlerInterface {
 
     @Override
     public Answer getAnswer(String str) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public List<Answer> getAnswers(int testId) throws SQLException {
         return null;
     }
 
