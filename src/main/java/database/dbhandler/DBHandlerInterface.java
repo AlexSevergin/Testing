@@ -15,12 +15,6 @@ import java.util.Map;
  * @author Oleksandr Severhin
  */
 public interface DBHandlerInterface {
-
-    /**
-     * It's needed to use the testing database
-     */
-    void use();
-
     /**
      * Insert a row in table user
      * @param login
@@ -28,7 +22,7 @@ public interface DBHandlerInterface {
      * @param name
      * @return true/false
      */
-    boolean register(String login, String password, String name);
+    boolean register(String login, String password, String name) throws SQLException;
 
     /**
      * Checks if login and password are the same as in the database
@@ -63,36 +57,45 @@ public interface DBHandlerInterface {
      * Updates User password in the database
      * @param id
      * @param password
+     * @return row count
+     * @throws SQLException
      */
-    void updateUserPassword(int id, String password) throws SQLException;
+    int updateUserPassword(int id, String password) throws SQLException;
 
     /**
      * Updates User name in the database
      * @param id
      * @param name
+     * @return row count
+     * @throws SQLException
      */
-    void updateUserName(int id, String name) throws SQLException;
+    int updateUserName(int id, String name) throws SQLException;
 
     /**
      * Makes used an admin
      * @param id
+     * @return row count
      * @throws SQLException
      */
-    void makeUserAdmin(int id) throws SQLException;
+    int makeUserAdmin(int id) throws SQLException;
 
     /**
      * Blocks User (status = blocked)
      * @param id
      * @param status
+     * @return row count
+     * @throws SQLException
      */
-    void blockUser(int id, Status status) throws SQLException;
+    int blockUser(int id, Status status) throws SQLException;
 
     /**
      * Unblocks User (status = active)
      * @param id
      * @param status
+     * @return row count
+     * @throws SQLException
      */
-    void unblockUser(int id, Status status) throws SQLException;
+    int unblockUser(int id, Status status) throws SQLException;
 
     /**
      * Gets list with all users by parts (for paging)
@@ -169,14 +172,14 @@ public interface DBHandlerInterface {
      * @param queries
      * @return true/false
      */
-    boolean insertTest(String name, String subject, int difficulty, String time, int queries);
+    boolean insertTest(String name, String subject, int difficulty, String time, int queries) throws SQLException;
 
     /**
      * Returns the Test Object with all fields set
      * @param id
      * @return Test
      */
-    Test getTest(int id);
+    Test getTest(int id) throws SQLException;
 
     /**
      * Returns a List with Tests by parts (for paging)
@@ -184,7 +187,7 @@ public interface DBHandlerInterface {
      * @param limit  - depends on number of tests displayed on the page
      * @return List<Test>
      */
-    List <Test> getTests(int offset, int limit);
+    List <Test> getTests(int offset, int limit) throws SQLException;
 
     /**
      * Returns a List with Tests sorted by name by parts (for paging)
@@ -192,7 +195,7 @@ public interface DBHandlerInterface {
      * @param limit  - depends on number of tests displayed on the page
      * @return List<Test>
      */
-    List <Test> getTestsByName(int offset, int limit);
+    List <Test> getTestsByName(int offset, int limit) throws SQLException;
 
     /**
      * Returns a List with Tests sorted by difficulty by parts (for paging)
@@ -200,7 +203,7 @@ public interface DBHandlerInterface {
      * @param limit  - depends on number of tests displayed on the page
      * @return List<Test>
      */
-    List <Test> getTestsByDifficulty(int offset, int limit);
+    List <Test> getTestsByDifficulty(int offset, int limit) throws SQLException;
 
     /**
      * Returns a List with Tests sorted by time by parts (for paging)
@@ -208,7 +211,7 @@ public interface DBHandlerInterface {
      * @param limit  - depends on number of tests displayed on the page
      * @return List<Test>
      */
-    List <Test> getTestsByTime(int offset, int limit);
+    List <Test> getTestsByTime(int offset, int limit) throws SQLException;
 
     /**
      * Returns a List with Tests sorted by queries by parts (for paging)
@@ -216,42 +219,52 @@ public interface DBHandlerInterface {
      * @param limit  - depends on number of tests displayed on the page
      * @return List<Test>
      */
-    List <Test> getTestsByQueries(int offset, int limit);
+    List <Test> getTestsByQueries(int offset, int limit) throws SQLException;
 
     /**
      * Updates the test name by id given
      * @param testId
      * @param name
+     * @return row count
+     * @throws SQLException
      */
-    void updateTestName(int testId, String name);
+    int updateTestName(int testId, String name) throws SQLException;
 
     /**
      * Updates the test subject by id given
      * @param testId
      * @param subject
+     * @return row count
+     * @throws SQLException
      */
-    void updateTestSubject(int testId, String subject);
+    int updateTestSubject(int testId, String subject) throws SQLException;
 
     /**
      * Updates the test difficulty by id given
      * @param testId
      * @param difficulty
+     * @return row count
+     * @throws SQLException
      */
-    void updateTestDifficulty(int testId, int difficulty);
+    int updateTestDifficulty(int testId, int difficulty) throws SQLException;
 
     /**
      * Updates the test time by id given
      * @param testId
      * @param time
+     * @return row count
+     * @throws SQLException
      */
-    void updateTestTime(int testId, String time);
+    int updateTestTime(int testId, String time) throws SQLException;
 
     /**
      * Updates the test queries (amount of Questions) by id given
      * @param testId
      * @param queries
+     * @return row count
+     * @throws SQLException
      */
-    void updateTestQueries(int testId, int queries);
+    int updateTestQueries(int testId, int queries) throws SQLException;
 
 
     /**
@@ -280,20 +293,25 @@ public interface DBHandlerInterface {
     /**
      * Updates Question by an id given
      * @param id
-     */
-    void updateQuestion(int id) throws SQLException;
-
-    /**
-     * Deletes Question from the database by a String given
      * @param str
+     * @return row count
      * @throws SQLException
      */
-    void deleteQuestion(String str) throws SQLException;
+    int updateQuestion(int id, String str) throws SQLException;
+
+    /**
+     * Deletes Question from the database by an id given
+     * @param id
+     * @return row count
+     * @throws SQLException
+     */
+    int deleteQuestion(int id) throws SQLException;
 
     /**
      * Insert a row in table Answer by getting a String (answer itself)
      * @param str
-     * @return (if everything ok/if the Question already exists in the database)
+     * @return true - if everything ok or
+     * false - if the Question already exists in the database
      */
     boolean insertAnswer(String str) throws SQLException;
 
@@ -315,16 +333,20 @@ public interface DBHandlerInterface {
 
     /**
      * Updates Answer by a String given
+     * @param id
      * @param str
-     */
-    void updateAnswer(String str) throws SQLException;
-
-    /**
-     * Deletes Answer from the database by a String given
-     * @param str
+     * @return row count
      * @throws SQLException
      */
-    void deleteAnswer(String str) throws SQLException;
+    int updateAnswer(int id, String str) throws SQLException;
+
+    /**
+     * Deletes Answer from the database by an id given
+     * @param id
+     * @return row count
+     * @throws SQLException
+     */
+    int deleteAnswer(int id) throws SQLException;
 
     /**
      * Adds a raw in the table question_has_answer
@@ -348,8 +370,9 @@ public interface DBHandlerInterface {
      * Adds a raw in the table user_has_test
      * @param userId
      * @param testId
+     * @param result
      * @return true/false
      * @throws SQLException
      */
-    boolean userHasTest(int userId, int testId) throws SQLException;
+    boolean userHasTest(int userId, int testId, double result) throws SQLException;
 }

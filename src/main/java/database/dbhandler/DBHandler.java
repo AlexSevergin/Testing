@@ -24,13 +24,13 @@ public class DBHandler implements DBHandlerInterface {
     private static final Logger LOG = Logger.getLogger(DBHandler.class);
     private static DBHandler INSTANCE;
     private static Connection connection;
+
     {
         init();
     }
 
     /**
      * Gets connection from Pool
-     * @return
      */
     private static Connection getConnection() {
         return Pool.getInstance().getConnection();
@@ -56,15 +56,9 @@ public class DBHandler implements DBHandlerInterface {
         return INSTANCE;
     }
 
-
     @Override
-    public void use() {
-
-    }
-
-    @Override
-    public boolean register(String login, String password, String name) {
-        boolean res = false;
+    public boolean register(String login, String password, String name) throws SQLException {
+        boolean res;
         try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.REGISTER)) {
             pstmt.setString(1, login);
             pstmt.setString(2, password);
@@ -76,6 +70,7 @@ public class DBHandler implements DBHandlerInterface {
         } catch (SQLException e) {
             LOG.error(e.getMessage());
             e.printStackTrace();
+            throw new SQLException(e.getMessage());
         }
         return res;
     }
@@ -108,37 +103,143 @@ public class DBHandler implements DBHandlerInterface {
 
     @Override
     public User getUser(int userId) throws SQLException, LoginException {
-        return null;
+        User user;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_USER,
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            pstmt.setInt(1, userId);
+            try (ResultSet resultSet = pstmt.executeQuery()) {
+                boolean completed = resultSet.first();
+                if (completed) {
+                    String login = resultSet.getString("login");
+                    user = new User(login);
+                    user.setId(userId);
+                    user.setPassword(resultSet.getString("password"));
+                    user.setName(resultSet.getString("name"));
+                    user.setRole(Role.valueOf(resultSet.getString("role")));
+                    user.setStatus(Status.valueOf(resultSet.getString("status").toUpperCase()));
+                } else {
+                    throw new LoginException();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            LOG.error(e.getMessage());
+            throw new LoginException();
+        }
+        return user;
     }
 
     @Override
     public User getUser(String login) throws SQLException, LoginException {
-        return null;
+        User user = new User(login);
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_USER_BY_LOGIN,
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            pstmt.setString(1, login);
+            try (ResultSet resultSet = pstmt.executeQuery()) {
+                boolean completed = resultSet.first();
+                if (completed) {
+                    user.setId(resultSet.getInt("id"));
+                    user.setPassword(resultSet.getString("password"));
+                    user.setName(resultSet.getString("name"));
+                    user.setRole(Role.valueOf(resultSet.getString("role")));
+                    user.setStatus(Status.valueOf(resultSet.getString("status").toUpperCase()));
+                } else {
+                    throw new LoginException();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            LOG.error(e.getMessage());
+            throw new LoginException();
+        }
+        return user;
     }
 
     @Override
-    public void updateUserPassword(int id, String password) throws SQLException {
-
+    public int updateUserPassword(int id, String password) throws SQLException {
+        int res;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.UPDATE_USER_PASSWORD,
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            pstmt.setInt(1, id);
+            pstmt.setString(2, password);
+            try {
+                res = pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                LOG.error(e.getMessage());
+                throw new SQLException();
+            }
+        }
+        return res;
     }
 
     @Override
-    public void updateUserName(int id, String name) throws SQLException {
-
+    public int updateUserName(int id, String name) throws SQLException {
+        int res;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.UPDATE_USER_NAME,
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            pstmt.setInt(1, id);
+            pstmt.setString(2, name);
+            try {
+                res = pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                LOG.error(e.getMessage());
+                throw new SQLException();
+            }
+        }
+        return res;
     }
 
     @Override
-    public void makeUserAdmin(int id) throws SQLException {
-
+    public int makeUserAdmin(int id) throws SQLException {
+        int res;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.MAKE_USER_ADMIN,
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            pstmt.setInt(1, id);
+            try {
+                res = pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                LOG.error(e.getMessage());
+                throw new SQLException();
+            }
+        }
+        return res;
     }
 
     @Override
-    public void blockUser(int id, Status status) throws SQLException {
-
+    public int blockUser(int id, Status status) throws SQLException {
+        int res;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.BLOCK_USER,
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            pstmt.setInt(1, id);
+            try {
+                res = pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                LOG.error(e.getMessage());
+                throw new SQLException();
+            }
+        }
+        return res;
     }
 
     @Override
-    public void unblockUser(int id, Status status) throws SQLException {
-
+    public int unblockUser(int id, Status status) throws SQLException {
+        int res;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.UNBLOCK_USER,
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            pstmt.setInt(1, id);
+            try {
+                res = pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                LOG.error(e.getMessage());
+                throw new SQLException();
+            }
+        }
+        return res;
     }
 
     @Override
@@ -177,73 +278,201 @@ public class DBHandler implements DBHandlerInterface {
     }
 
     @Override
-    public boolean insertTest(String name, String subject, int difficulty, String time, int queries) {
-        return false;
+    public boolean insertTest(String name, String subject, int difficulty, String time, int queries) throws SQLException {
+        boolean res;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.INSERT_QUESTION)) {
+            pstmt.setString(1, name);
+            pstmt.setString(2, subject);
+            pstmt.setInt(3, difficulty);
+            pstmt.setString(4, time);
+            pstmt.setInt(5, queries);
+            pstmt.executeUpdate();
+            res = true;
+        } catch (SQLException e) {
+            LOG.error(e.getMessage());
+            e.printStackTrace();
+            throw new SQLException(e.getMessage());
+        }
+        return res;
     }
 
     @Override
-    public Test getTest(int id) {
+    public Test getTest(int id) throws SQLException {
+        Test test;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_TEST,
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            pstmt.setInt(1, id);
+            try (ResultSet resultSet = pstmt.executeQuery()) {
+                boolean completed = resultSet.first();
+                if (completed) {
+                    test = new Test(id);
+                    test.setName(resultSet.getString("name"));
+                    test.setName(resultSet.getString("subject"));
+                    test.setDifficulty(resultSet.getInt("difficulty"));
+                    test.setTime(resultSet.getString("time"));
+                    test.setQueries(resultSet.getInt("queries"));
+                } else {
+                    throw new SQLException();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            LOG.error(e.getMessage());
+            throw new SQLException();
+        }
+        return test;
+    }
+
+    @Override
+    public List<Test> getTests(int offset, int limit) throws SQLException {
         return null;
     }
 
     @Override
-    public List<Test> getTests(int offset, int limit) {
+    public List<Test> getTestsByName(int offset, int limit) throws SQLException {
         return null;
     }
 
     @Override
-    public List<Test> getTestsByName(int offset, int limit) {
+    public List<Test> getTestsByDifficulty(int offset, int limit) throws SQLException {
         return null;
     }
 
     @Override
-    public List<Test> getTestsByDifficulty(int offset, int limit) {
+    public List<Test> getTestsByTime(int offset, int limit) throws SQLException {
         return null;
     }
 
     @Override
-    public List<Test> getTestsByTime(int offset, int limit) {
+    public List<Test> getTestsByQueries(int offset, int limit) throws SQLException {
         return null;
     }
 
     @Override
-    public List<Test> getTestsByQueries(int offset, int limit) {
-        return null;
+    public int updateTestName(int testId, String name) throws SQLException {
+        int res;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.UPDATE_TEST_NAME,
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            pstmt.setInt(1, testId);
+            pstmt.setString(2, name);
+            try {
+                res = pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                LOG.error(e.getMessage());
+                throw new SQLException();
+            }
+        }
+        return res;
     }
 
     @Override
-    public void updateTestName(int testId, String name) {
-
+    public int updateTestSubject(int testId, String subject) throws SQLException {
+        int res;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.UPDATE_TEST_SUBJECT,
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            pstmt.setInt(1, testId);
+            pstmt.setString(2, subject);
+            try {
+                res = pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                LOG.error(e.getMessage());
+                throw new SQLException();
+            }
+        }
+        return res;
     }
 
     @Override
-    public void updateTestSubject(int testId, String subject) {
-
+    public int updateTestDifficulty(int testId, int difficulty) throws SQLException {
+        int res;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.UPDATE_TEST_DIFFICULTY,
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            pstmt.setInt(1, testId);
+            pstmt.setInt(2, difficulty);
+            try {
+                res = pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                LOG.error(e.getMessage());
+                throw new SQLException();
+            }
+        }
+        return res;
     }
 
     @Override
-    public void updateTestDifficulty(int testId, int difficulty) {
-
+    public int updateTestTime(int testId, String time) throws SQLException {
+        int res;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.UPDATE_TEST_TIME,
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            pstmt.setInt(1, testId);
+            pstmt.setString(2, time);
+            try {
+                res = pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                LOG.error(e.getMessage());
+                throw new SQLException();
+            }
+        }
+        return res;
     }
 
     @Override
-    public void updateTestTime(int testId, String time) {
-
-    }
-
-    @Override
-    public void updateTestQueries(int testId, int queries) {
-
+    public int updateTestQueries(int testId, int queries) throws SQLException {
+        int res;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.UPDATE_TEST_QUERIES,
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            pstmt.setInt(1, testId);
+            pstmt.setInt(2, queries);
+            try {
+                res = pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                LOG.error(e.getMessage());
+                throw new SQLException();
+            }
+        }
+        return res;
     }
 
     @Override
     public boolean insertQuestion(String str) throws SQLException {
-        return false;
+        boolean res;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.INSERT_QUESTION)) {
+            pstmt.setString(1, str);
+            pstmt.executeUpdate();
+            res = true;
+        } catch (SQLException e) {
+            LOG.error(e.getMessage());
+            e.printStackTrace();
+            throw new SQLException(e.getMessage());
+        }
+        return res;
     }
 
     @Override
     public Question getQuestion(int id) throws SQLException {
-        return null;
+        Question question = new Question(id);
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_QUESTION,
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            pstmt.setInt(1, id);
+            try (ResultSet resultSet = pstmt.executeQuery()) {
+                boolean completed = resultSet.first();
+                if (completed) {
+                    question.setStr(resultSet.getString("string"));
+                } else {
+                    throw new SQLException();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            LOG.error(e.getMessage());
+            throw new SQLException();
+        }
+        return question;
     }
 
     @Override
@@ -252,23 +481,75 @@ public class DBHandler implements DBHandlerInterface {
     }
 
     @Override
-    public void updateQuestion(int id) throws SQLException {
-
+    public int updateQuestion(int id, String str) throws SQLException {
+        int res;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.UPDATE_QUESTION,
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            pstmt.setInt(1, id);
+            pstmt.setString(2, str);
+            try {
+                res = pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                LOG.error(e.getMessage());
+                throw new SQLException();
+            }
+        }
+        return res;
     }
 
     @Override
-    public void deleteQuestion(String str) throws SQLException {
-
+    public int deleteQuestion(int id) throws SQLException {
+        int res;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.DELETE_QUESTION,
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            pstmt.setInt(1, id);
+            try {
+                res = pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                LOG.error(e.getMessage());
+                throw new SQLException();
+            }
+        }
+        return res;
     }
 
     @Override
     public boolean insertAnswer(String str) throws SQLException {
-        return false;
+        boolean res;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.INSERT_ANSWER)) {
+            pstmt.setString(1, str);
+            pstmt.executeUpdate();
+            res = true;
+        } catch (SQLException e) {
+            LOG.error(e.getMessage());
+            e.printStackTrace();
+            throw new SQLException(e.getMessage());
+        }
+        return res;
     }
 
     @Override
     public Answer getAnswer(int id) throws SQLException {
-        return null;
+        Answer answer = new Answer(id);
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_QUESTION,
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            pstmt.setInt(1, id);
+            try (ResultSet resultSet = pstmt.executeQuery()) {
+                boolean completed = resultSet.first();
+                if (completed) {
+                    answer.setStr(resultSet.getString("string"));
+                } else {
+                    throw new SQLException();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            LOG.error(e.getMessage());
+            throw new SQLException();
+        }
+        return answer;
     }
 
     @Override
@@ -277,27 +558,86 @@ public class DBHandler implements DBHandlerInterface {
     }
 
     @Override
-    public void updateAnswer(String str) throws SQLException {
-
+    public int updateAnswer(int id, String str) throws SQLException {
+        int res;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.UPDATE_ANSWER,
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            pstmt.setInt(1, id);
+            pstmt.setString(2, str);
+            try {
+                res = pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                LOG.error(e.getMessage());
+                throw new SQLException();
+            }
+        }
+        return res;
     }
 
     @Override
-    public void deleteAnswer(String str) throws SQLException {
-
+    public int deleteAnswer(int id) throws SQLException {
+        int res;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.DELETE_ANSWER,
+                ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
+            pstmt.setInt(1, id);
+            try {
+                res = pstmt.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                LOG.error(e.getMessage());
+                throw new SQLException();
+            }
+        }
+        return res;
     }
 
     @Override
     public boolean questionHasAnswer(int questionId, int answerId) throws SQLException {
-        return false;
+        boolean res = false;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.QUESTION_HAS_ANSWER)) {
+            pstmt.setInt(1, questionId);
+            pstmt.setInt(2, answerId);
+            pstmt.executeUpdate();
+            res = true;
+        } catch (SQLException e) {
+            LOG.error(e.getMessage());
+            e.printStackTrace();
+            throw new SQLException(e.getMessage());
+        }
+        return res;
     }
 
     @Override
     public boolean testHasQuestion(int testId, int questionId) throws SQLException {
-        return false;
+        boolean res = false;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.TEST_HAS_QUESTION)) {
+            pstmt.setInt(1, testId);
+            pstmt.setInt(2, questionId);
+            pstmt.executeUpdate();
+            res = true;
+        } catch (SQLException e) {
+            LOG.error(e.getMessage());
+            e.printStackTrace();
+            throw new SQLException(e.getMessage());
+        }
+        return res;
     }
 
     @Override
-    public boolean userHasTest(int userId, int testId) throws SQLException {
-        return false;
+    public boolean userHasTest(int userId, int testId, double result) throws SQLException {
+        boolean res = false;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.USER_HAS_TEST)) {
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, testId);
+            pstmt.setDouble(3, result);
+            pstmt.executeUpdate();
+            res = true;
+        } catch (SQLException e) {
+            LOG.error(e.getMessage());
+            e.printStackTrace();
+            throw new SQLException(e.getMessage());
+        }
+        return res;
     }
 }

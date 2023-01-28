@@ -16,6 +16,14 @@ public class Test {
     private int queries;
 
     /**
+     * Creating a test by id given
+     * @param id
+     */
+    public Test(int id) {
+        this.id = id;
+    }
+
+    /**
      * Creating a Test
      * @param name
      * @param subject
@@ -43,7 +51,7 @@ public class Test {
         return name;
     }
 
-    private void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -51,7 +59,7 @@ public class Test {
         return subject;
     }
 
-    private void setSubject(String subject) {
+    public void setSubject(String subject) {
         this.subject = subject;
     }
 
@@ -59,13 +67,13 @@ public class Test {
         return difficulty;
     }
 
-    private void setDifficulty(int difficulty) {
+    public void setDifficulty(int difficulty) {
         this.difficulty = difficulty;
     }
 
     public String getTime() { return time; }
 
-    private void setTime(String time) {
+    public void setTime(String time) {
         this.time = time;
     }
 
@@ -73,7 +81,7 @@ public class Test {
         return queries;
     }
 
-    private void setQueries(int queries) {
+    public void setQueries(int queries) {
         this.queries = queries;
     }
 

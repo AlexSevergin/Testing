@@ -59,7 +59,7 @@ public class User {
         return login;
     }
 
-    private void setLogin(String login) {
+    public void setLogin(String login) {
         this.login = login;
     }
 
@@ -67,7 +67,7 @@ public class User {
         return password;
     }
 
-    private void setPassword(String password) {
+    public void setPassword(String password) {
         this.password = password;
     }
 

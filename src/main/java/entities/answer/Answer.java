@@ -10,10 +10,10 @@ public class Answer {
 
     /**
      * Creating an Answer
-     * @param str
+     * @param id
      */
-    public Answer(String str) {
-        this.str = str;
+    public Answer(int id) {
+        this.id = id;
     }
 
     public int getId() {
@@ -28,7 +28,7 @@ public class Answer {
         return str;
     }
 
-    private void setStr(String str) {
+    public void setStr(String str) {
         this.str = str;
     }
 }
