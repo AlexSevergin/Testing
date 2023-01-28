@@ -1,12 +1,10 @@
 package database.dbhandler;
 
-import answer.Answer;
-import question.Question;
-import test.Test;
-import user.Role;
-import user.Status;
-import user.User;
-
+import entities.answer.Answer;
+import entities.question.Question;
+import entities.test.Test;
+import entities.user.Status;
+import entities.user.User;
 import javax.security.auth.login.LoginException;
 import java.sql.SQLException;
 import java.util.List;
@@ -17,6 +15,12 @@ import java.util.Map;
  * @author Oleksandr Severhin
  */
 public interface DBHandlerInterface {
+
+    /**
+     * It's needed to use the testing database
+     */
+    void use();
+
     /**
      * Insert a row in table user
      * @param login
@@ -46,14 +50,39 @@ public interface DBHandlerInterface {
     User getUser(int userId) throws SQLException, LoginException;
 
     /**
-     * Updates User in the database
-     * @param login
+     * Updates User password in the database
+     * @param id
      * @param password
+     */
+    void updateUserPassword(int id, String password) throws SQLException;
+
+    /**
+     * Updates User name in the database
+     * @param id
      * @param name
-     * @param role
+     */
+    void updateUserName(int id, String name) throws SQLException;
+
+    /**
+     * Makes used an admin
+     * @param id
+     * @throws SQLException
+     */
+    void makeUserAdmin(int id) throws SQLException;
+
+    /**
+     * Blocks User (status = blocked)
+     * @param id
      * @param status
      */
-    void updateUser(String login, String password, String name, Role role, Status status) throws SQLException;
+    void blockUser(int id, Status status) throws SQLException;
+
+    /**
+     * Unblocks User (status = active)
+     * @param id
+     * @param status
+     */
+    void unblockUser(int id, Status status) throws SQLException;
 
     /**
      * Get User from the database by the name given
@@ -68,7 +97,7 @@ public interface DBHandlerInterface {
     /**
      * Gets list with all users by parts (for paging)
      * @param offset - depends on the displayed page
-     * @param limit  - depends on number of tests displayed on the page
+     * @param limit  - depends on number of users displayed on the page
      * @return ArrayList with all users
      * @throws SQLException
      */
@@ -77,7 +106,7 @@ public interface DBHandlerInterface {
     /**
      * Gets list with all users sorted by login by parts (for paging)
      * @param offset - depends on the displayed page
-     * @param limit  - depends on number of tests displayed on the page
+     * @param limit  - depends on number of users displayed on the page
      * @return ArrayList with all users ordered by login
      * @throws SQLException
      */
@@ -86,7 +115,7 @@ public interface DBHandlerInterface {
     /**
      * Gets list with all users sorted by name by parts (for paging)
      * @param offset - depends on the displayed page
-     * @param limit  - depends on number of tests displayed on the page
+     * @param limit  - depends on number of users displayed on the page
      * @return ArrayList with all users ordered by name
      * @throws SQLException
      */
@@ -95,42 +124,41 @@ public interface DBHandlerInterface {
     /**
      * Gets list with all users sorted by status by parts (for paging)
      * @param offset - depends on the displayed page
-     * @param limit  - depends on number of tests displayed on the page
+     * @param limit  - depends on number of users displayed on the page
      * @return ArrayList with all users ordered by status
      * @throws SQLException
      */
     List<User> getUsersByStatus(int offset, int limit) throws SQLException;
 
     /**
-     * Gets map of tests (and results) the user passed by parts (for paging) by users id
+     * Gets Map of tests names and user results for the test user passed by parts (for paging) by users id
      * @param userId
      * @param offset - depends on the displayed page
      * @param limit  - depends on number of tests displayed on the page
-     * @return Hashmap (Test, result)
+     * @return Map (String, Double)
      * @throws SQLException
      */
-    Map<Test, Double> getUserTests(int userId, int offset, int limit) throws SQLException;
+    Map<String, Double> getUserTests(int userId, int offset, int limit) throws SQLException;
 
     /**
-     * Gets map of tests (and results) sorted by name the user passed by parts (for paging) by users id
+     * Gets Map of tests names and user results for the test user passed sorted by test name by parts (for paging) by users id
      * @param userId
      * @param offset - depends on the displayed page
      * @param limit  - depends on number of tests displayed on the page
-     * @return Hashmap (Test, result) ordered by name
+     * @return Map (String, Double)
      * @throws SQLException
      */
-    Map<Test, Double> getUserTestsByName(int userId, int offset, int limit) throws SQLException;
+    Map<String, Double> getUserTestsByName(int userId, int offset, int limit) throws SQLException;
 
     /**
-     * Gets map of tests (and results) sorted by result the user passed by parts (for paging) by users id
+     * Gets Map of tests names and user results for the test user passed sorted by user results by parts (for paging) by users id
      * @param userId
-     * @param fromHighest - result from highest to lowest or vice versa
      * @param offset - depends on the displayed page
      * @param limit  - depends on number of tests displayed on the page
-     * @return Hashmap (Test, result) ordered by result
+     * @return Map (String, Double)
      * @throws SQLException
      */
-    Map<Test, Double> getUserTestsByResult(int userId, boolean fromHighest, int offset, int limit) throws SQLException;
+    Map<String, Double> getUserTestsByResult(int userId, int offset, int limit) throws SQLException;
 
     /**
      * Inserts a row in table Test
@@ -145,21 +173,86 @@ public interface DBHandlerInterface {
 
     /**
      * Returns the Test Object with all fields set
-     * @param name
+     * @param id
      * @return Test
      */
-    Test getTest(String name);
+    Test getTest(int id);
 
     /**
-     * Updates the test by id given
+     * Returns a List with Tests by parts (for paging)
+     * @param offset - depends on the displayed page
+     * @param limit  - depends on number of tests displayed on the page
+     * @return List<Test>
+     */
+    List <Test> getTests(int offset, int limit);
+
+    /**
+     * Returns a List with Tests sorted by name by parts (for paging)
+     * @param offset - depends on the displayed page
+     * @param limit  - depends on number of tests displayed on the page
+     * @return List<Test>
+     */
+    List <Test> getTestsByName(int offset, int limit);
+
+    /**
+     * Returns a List with Tests sorted by difficulty by parts (for paging)
+     * @param offset - depends on the displayed page
+     * @param limit  - depends on number of tests displayed on the page
+     * @return List<Test>
+     */
+    List <Test> getTestsByDifficulty(int offset, int limit);
+
+    /**
+     * Returns a List with Tests sorted by time by parts (for paging)
+     * @param offset - depends on the displayed page
+     * @param limit  - depends on number of tests displayed on the page
+     * @return List<Test>
+     */
+    List <Test> getTestsByTime(int offset, int limit);
+
+    /**
+     * Returns a List with Tests sorted by queries by parts (for paging)
+     * @param offset - depends on the displayed page
+     * @param limit  - depends on number of tests displayed on the page
+     * @return List<Test>
+     */
+    List <Test> getTestsByQueries(int offset, int limit);
+
+    /**
+     * Updates the test name by id given
      * @param testId
      * @param name
+     */
+    void updateTestName(int testId, String name);
+
+    /**
+     * Updates the test subject by id given
+     * @param testId
      * @param subject
+     */
+    void updateTestSubject(int testId, String subject);
+
+    /**
+     * Updates the test difficulty by id given
+     * @param testId
      * @param difficulty
+     */
+    void updateTestDifficulty(int testId, int difficulty);
+
+    /**
+     * Updates the test time by id given
+     * @param testId
      * @param time
+     */
+    void updateTestTime(int testId, String time);
+
+    /**
+     * Updates the test queries (amount of Questions) by id given
+     * @param testId
      * @param queries
      */
-    void updateTest(int testId, String name, String subject, int difficulty, String time, int queries);
+    void updateTestQueries(int testId, int queries);
+
 
     /**
      * Insert a row in table Question by getting a String (question itself)
@@ -169,24 +262,26 @@ public interface DBHandlerInterface {
     boolean insertQuestion(String str) throws SQLException;
 
     /**
-     * Get Question from database by a String given
-     * @param str
+     * Get Question from database by an id given
+     * @param id
      * @return Question with all fields set
      */
-    Question getQuestion(String str) throws SQLException;
+    Question getQuestion(int id) throws SQLException;
 
     /**
-     * Get Question from database by a testId given
+     * Get Question from database by a testId given by parts (for paging)
      * @param testId
+     * @param offset - depends on the displayed page
+     * @param limit  - depends on number of tests displayed on the page
      * @return List with Questions in the test
      */
-    List<Question> getQuestions(int testId) throws SQLException;
+    List<Question> getQuestions(int testId, int offset, int limit) throws SQLException;
 
     /**
-     * Updates Question by a String given
-     * @param str
+     * Updates Question by an id given
+     * @param id
      */
-    void updateQuestion(String str) throws SQLException;
+    void updateQuestion(int id) throws SQLException;
 
     /**
      * Deletes Question from the database by a String given
@@ -203,18 +298,20 @@ public interface DBHandlerInterface {
     boolean insertAnswer(String str) throws SQLException;
 
     /**
-     * Get Question from database by a String given
-     * @param str
+     * Get Answer from database by an id given
+     * @param id
      * @return Question with all fields set
      */
-    Answer getAnswer(String str) throws SQLException;
+    Answer getAnswer(int id) throws SQLException;
 
     /**
-     * Get List with Answers from database by a questionId given
+     * Get List with Answers from database by parts (for paging) by a questionId given
      * @param testId
+     * @param offset - depends on the displayed page
+     * @param limit  - depends on number of tests displayed on the page
      * @return List with Answers in the test
      */
-    List<Answer> getAnswers(int testId) throws SQLException;
+    List<Answer> getAnswers(int testId, int offset, int limit) throws SQLException;
 
     /**
      * Updates Answer by a String given

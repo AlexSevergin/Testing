@@ -1,13 +1,13 @@
 package database.dbhandler;
 
-import answer.Answer;
+import entities.answer.Answer;
 import database.connection_pool.Pool;
 import org.apache.log4j.Logger;
-import question.Question;
-import test.Test;
-import user.Role;
-import user.Status;
-import user.User;
+import entities.question.Question;
+import entities.test.Test;
+import entities.user.Role;
+import entities.user.Status;
+import entities.user.User;
 import javax.security.auth.login.LoginException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -54,143 +54,5 @@ public class DBHandler implements DBHandlerInterface {
         return INSTANCE;
     }
 
-    @Override
-    public boolean register(String login, String password, String name) {
-        return false;
-    }
 
-    @Override
-    public User logIn(String login, String password) throws LoginException {
-        return null;
-    }
-
-    @Override
-    public User getUser(int userId) throws SQLException, LoginException {
-        return null;
-    }
-
-    @Override
-    public void updateUser(String login, String password, String name, Role role, Status status) throws SQLException {
-
-    }
-
-    @Override
-    public User getUser(String login) throws SQLException, LoginException {
-        return null;
-    }
-
-    @Override
-    public List<User> getUsers(int offset, int limit) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public List<User> getUsersByLogin(int offset, int limit) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public List<User> getUsersByName(int offset, int limit) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public List<User> getUsersByStatus(int offset, int limit) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Map<Test, Double> getUserTests(int userId, int offset, int limit) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Map<Test, Double> getUserTestsByName(int userId, int offset, int limit) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public Map<Test, Double> getUserTestsByResult(int userId, boolean fromHighest, int offset, int limit) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public boolean insertTest(String name, String subject, int difficulty, String time, int queries) {
-        return false;
-    }
-
-    @Override
-    public Test getTest(String name) {
-        return null;
-    }
-
-    @Override
-    public void updateTest(int testId, String name, String subject, int difficulty, String time, int queries) {
-
-    }
-
-    @Override
-    public boolean insertQuestion(String str) throws SQLException {
-        return false;
-    }
-
-    @Override
-    public Question getQuestion(String str) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public List<Question> getQuestions(int testId) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public void updateQuestion(String str) throws SQLException {
-
-    }
-
-    @Override
-    public void deleteQuestion(String str) throws SQLException {
-
-    }
-
-    @Override
-    public boolean insertAnswer(String str) throws SQLException {
-        return false;
-    }
-
-    @Override
-    public Answer getAnswer(String str) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public List<Answer> getAnswers(int testId) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public void updateAnswer(String str) throws SQLException {
-
-    }
-
-    @Override
-    public void deleteAnswer(String str) throws SQLException {
-
-    }
-
-    @Override
-    public boolean questionHasAnswer(int questionId, int answerId) throws SQLException {
-        return false;
-    }
-
-    @Override
-    public boolean testHasQuestion(int testId, int questionId) throws SQLException {
-        return false;
-    }
-
-    @Override
-    public boolean userHasTest(int userId, int testId) throws SQLException {
-        return false;
-    }
 }

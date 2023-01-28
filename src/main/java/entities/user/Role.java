@@ -1,4 +1,4 @@
-package user;
+package entities.user;
 
 /**
  * This enum contains different roles the user might have.

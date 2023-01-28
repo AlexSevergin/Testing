@@ -1,4 +1,4 @@
-package user;
+package entities.user;
 
 /**
  * This enum contains different status of the user.

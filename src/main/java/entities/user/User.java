@@ -1,9 +1,16 @@
-package user;
+package entities.user;
 
 import database.dbhandler.DBHandler;
+import org.apache.log4j.Logger;
+
 import javax.security.auth.login.LoginException;
 
+/**
+ * This class is responsible for User entity
+ * @author Oleksandr Severhin
+ */
 public class User {
+    public static final Logger LOG = Logger.getLogger(User.class);
     private int id;
     private String login;
     private String password;
@@ -11,6 +18,13 @@ public class User {
     private Role role;
     private Status status;
 
+    /**
+     * This constructor is used when user goes through registration
+     * @param login
+     * @param password
+     * @param name
+     * @param role
+     */
     public User(String login, String password, String name, Role role) {
         this.login = login;
         this.password = password;
@@ -19,6 +33,11 @@ public class User {
         this.status = Status.ACTIVE;
     }
 
+    /**
+     * This constructor is used when user logs in
+     * @param login
+     * @param password
+     */
     public User(String login, String password) throws LoginException {
         return DBHandler.getInstance().logIn(login, password);
     }

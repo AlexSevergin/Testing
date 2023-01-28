@@ -1,9 +1,17 @@
-package question;
+package entities.question;
 
+/**
+ * This class is responsible for Question entity
+ * @author Oleksandr Severhin
+ */
 public class Question {
     private int id;
     private String str;
 
+    /**
+     * Creating a Question
+     * @param str
+     */
     public Question(String str){
         this.str = str;
     }

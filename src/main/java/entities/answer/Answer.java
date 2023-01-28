@@ -1,9 +1,17 @@
-package answer;
+package entities.answer;
 
+/**
+ * This class is responsible for an Answer entity
+ * @author Oleksandr Severhin
+ */
 public class Answer {
     private int id;
     private String str;
 
+    /**
+     * Creating an Answer
+     * @param str
+     */
     public Answer(String str) {
         this.str = str;
     }

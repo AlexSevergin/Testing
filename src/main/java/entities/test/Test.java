@@ -1,5 +1,12 @@
-package test;
+package entities.test;
 
+import entities.user.User;
+import org.apache.log4j.Logger;
+
+/**
+ * This class is responsible for Test entity
+ * @author Oleksandr Severhin
+ */
 public class Test {
     private int id;
     private String name;
@@ -8,6 +15,14 @@ public class Test {
     private String time;
     private int queries;
 
+    /**
+     * Creating a Test
+     * @param name
+     * @param subject
+     * @param difficulty
+     * @param time
+     * @param queries
+     */
     public Test(String name, String subject, int difficulty, String time, int queries) {
         this.name = name;
         this.subject = subject;
