@@ -18,6 +18,11 @@ public class User {
     private Role role;
     private Status status;
 
+    /** This constructor is used when the user logs in */
+    public User(String login) {
+        this.login = login;
+    }
+
     /**
      * This constructor is used when user goes through registration
      * @param login
@@ -38,7 +43,7 @@ public class User {
      * @param login
      * @param password
      */
-    public User(String login, String password) throws LoginException {
+    public User login(String login, String password) throws LoginException {
         return DBHandler.getInstance().logIn(login, password);
     }
 
@@ -70,7 +75,7 @@ public class User {
         return name;
     }
 
-    private void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -80,7 +85,7 @@ public class User {
 
     public void setRole(Role role) { this.role = role; }
 
-    private void setStatus(Status status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

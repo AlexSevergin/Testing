@@ -50,6 +50,16 @@ public interface DBHandlerInterface {
     User getUser(int userId) throws SQLException, LoginException;
 
     /**
+     * Get User from the database by the name given
+     * @param login
+     * @return User object
+     * @throws SQLException
+     * @throws LoginException if there is no user with such id
+     * @see User
+     */
+    User getUser(String login) throws SQLException, LoginException;
+
+    /**
      * Updates User password in the database
      * @param id
      * @param password
@@ -83,16 +93,6 @@ public interface DBHandlerInterface {
      * @param status
      */
     void unblockUser(int id, Status status) throws SQLException;
-
-    /**
-     * Get User from the database by the name given
-     * @param login
-     * @return User object
-     * @throws SQLException
-     * @throws LoginException if there is no user with such id
-     * @see User
-     */
-    User getUser(String login) throws SQLException, LoginException;
 
     /**
      * Gets list with all users by parts (for paging)
