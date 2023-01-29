@@ -31,10 +31,10 @@ public class SqlRequests {
     protected static final String INSERT_TEST = "INSERT INTO test (name, subject, difficulty, time, queries) VALUES ('?', '?', ?, '?', ?);";
     protected static final String GET_TEST = "SELECT * FROM test WHERE id = ?";
     protected static final String GET_TESTS = "SELECT * FROM test LIMIT ? OFFSET ?;";
-    protected static final String GET_TEST_BY_NAME = "SELECT * FROM test ORDER BY name LIMIT ? OFFSET ?;";
-    protected static final String GET_TEST_BY_DIFFICULTY = "SELECT * FROM test ORDER BY difficulty LIMIT ? OFFSET ?;";
-    protected static final String GET_TEST_BY_TIME = "SELECT * FROM test ORDER BY time LIMIT ? OFFSET ?;";
-    protected static final String GET_TEST_BY_QUERIES = "SELECT * FROM test ORDER BY queries LIMIT ? OFFSET ?;";
+    protected static final String GET_TESTS_BY_NAME = "SELECT * FROM test ORDER BY name LIMIT ? OFFSET ?;";
+    protected static final String GET_TESTS_BY_DIFFICULTY = "SELECT * FROM test ORDER BY difficulty LIMIT ? OFFSET ?;";
+    protected static final String GET_TESTS_BY_TIME = "SELECT * FROM test ORDER BY time LIMIT ? OFFSET ?;";
+    protected static final String GET_TESTS_BY_QUERIES = "SELECT * FROM test ORDER BY queries LIMIT ? OFFSET ?;";
     protected static final String UPDATE_TEST_NAME = "UPDATE test SET name = '?' WHERE id = ?;";
     protected static final String UPDATE_TEST_SUBJECT = "UPDATE test SET subject = '?' WHERE id = ?;";
     protected static final String UPDATE_TEST_DIFFICULTY = "UPDATE test SET difficulty = ? WHERE id = ?;";

@@ -13,6 +13,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -102,7 +104,7 @@ public class DBHandler implements DBHandlerInterface {
     }
 
     @Override
-    public User getUser(int userId) throws SQLException, LoginException {
+    public User getUser(int userId) throws LoginException {
         User user;
         try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_USER,
                 ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
@@ -130,7 +132,7 @@ public class DBHandler implements DBHandlerInterface {
     }
 
     @Override
-    public User getUser(String login) throws SQLException, LoginException {
+    public User getUser(String login) throws LoginException {
         User user = new User(login);
         try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_USER_BY_LOGIN,
                 ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
@@ -243,44 +245,103 @@ public class DBHandler implements DBHandlerInterface {
     }
 
     @Override
-    public List<User> getUsers(int offset, int limit) throws SQLException {
-        return null;
+    public List<User> getUsers(int limit, int offset) throws SQLException {
+        List<User> users;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_USERS)) {
+            pstmt.setInt(1, limit);
+            pstmt.setInt(2, offset);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                users = resultSetToUserList(rs);
+            }
+        }
+        return users;
     }
 
     @Override
-    public List<User> getUsersByLogin(int offset, int limit) throws SQLException {
-        return null;
+    public List<User> getUsersByLogin(int limit, int offset) throws SQLException {
+        List<User> users;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_USERS_BY_LOGIN)) {
+            pstmt.setInt(1, limit);
+            pstmt.setInt(2, offset);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                users = resultSetToUserList(rs);
+            }
+        }
+        return users;
     }
 
     @Override
-    public List<User> getUsersByName(int offset, int limit) throws SQLException {
-        return null;
+    public List<User> getUsersByName(int limit, int offset) throws SQLException {
+        List<User> users;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_USERS_BY_NAME)) {
+            pstmt.setInt(1, limit);
+            pstmt.setInt(2, offset);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                users = resultSetToUserList(rs);
+            }
+        }
+        return users;
     }
 
     @Override
-    public List<User> getUsersByStatus(int offset, int limit) throws SQLException {
-        return null;
+    public List<User> getUsersByStatus(int limit, int offset) throws SQLException {
+        List<User> users;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_USERS_BY_STATUS)) {
+            pstmt.setInt(1, limit);
+            pstmt.setInt(2, offset);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                users = resultSetToUserList(rs);
+            }
+        }
+        return users;
     }
 
     @Override
-    public Map<String, Double> getUserTests(int userId, int offset, int limit) throws SQLException {
-        return null;
+    public Map<String, Double> getUserTests(int userId, int limit, int offset) throws SQLException {
+        Map<String, Double> testWithResults;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_USER_TESTS)) {
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, limit);
+            pstmt.setInt(3, offset);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                testWithResults = resultSetToMap(rs);
+            }
+        }
+        return testWithResults;
     }
 
     @Override
-    public Map<String, Double> getUserTestsByName(int userId, int offset, int limit) throws SQLException {
-        return null;
+    public Map<String, Double> getUserTestsByName(int userId, int limit, int offset) throws SQLException {
+        Map<String, Double> testWithResults;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_USER_TESTS_BY_NAME)) {
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, limit);
+            pstmt.setInt(3, offset);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                testWithResults = resultSetToMap(rs);
+            }
+        }
+        return testWithResults;
     }
 
     @Override
-    public Map<String, Double> getUserTestsByResult(int userId, int offset, int limit) throws SQLException {
-        return null;
+    public Map<String, Double> getUserTestsByResult(int userId, int limit, int offset) throws SQLException {
+        Map<String, Double> testWithResults;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_USER_TESTS_BY_RESULT)) {
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, limit);
+            pstmt.setInt(3, offset);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                testWithResults = resultSetToMap(rs);
+            }
+        }
+        return testWithResults;
     }
 
     @Override
     public boolean insertTest(String name, String subject, int difficulty, String time, int queries) throws SQLException {
         boolean res;
-        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.INSERT_QUESTION)) {
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.INSERT_TEST)) {
             pstmt.setString(1, name);
             pstmt.setString(2, subject);
             pstmt.setInt(3, difficulty);
@@ -324,28 +385,68 @@ public class DBHandler implements DBHandlerInterface {
     }
 
     @Override
-    public List<Test> getTests(int offset, int limit) throws SQLException {
-        return null;
+    public List<Test> getTests(int limit, int offset) throws SQLException {
+        List<Test> tests;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_TESTS)) {
+            pstmt.setInt(1, limit);
+            pstmt.setInt(2, offset);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                tests = resultSetToTestList(rs);
+            }
+        }
+        return tests;
     }
 
     @Override
-    public List<Test> getTestsByName(int offset, int limit) throws SQLException {
-        return null;
+    public List<Test> getTestsByName(int limit, int offset) throws SQLException {
+        List<Test> tests;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_TESTS_BY_NAME)) {
+            pstmt.setInt(1, limit);
+            pstmt.setInt(2, offset);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                tests = resultSetToTestList(rs);
+            }
+        }
+        return tests;
     }
 
     @Override
-    public List<Test> getTestsByDifficulty(int offset, int limit) throws SQLException {
-        return null;
+    public List<Test> getTestsByDifficulty(int limit, int offset) throws SQLException {
+        List<Test> tests;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_TESTS_BY_DIFFICULTY)) {
+            pstmt.setInt(1, limit);
+            pstmt.setInt(2, offset);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                tests = resultSetToTestList(rs);
+            }
+        }
+        return tests;
     }
 
     @Override
-    public List<Test> getTestsByTime(int offset, int limit) throws SQLException {
-        return null;
+    public List<Test> getTestsByTime(int limit, int offset) throws SQLException {
+        List<Test> tests;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_TESTS_BY_TIME)) {
+            pstmt.setInt(1, limit);
+            pstmt.setInt(2, offset);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                tests = resultSetToTestList(rs);
+            }
+        }
+        return tests;
     }
 
     @Override
-    public List<Test> getTestsByQueries(int offset, int limit) throws SQLException {
-        return null;
+    public List<Test> getTestsByQueries(int limit, int offset) throws SQLException {
+        List<Test> tests;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_TESTS_BY_QUERIES)) {
+            pstmt.setInt(1, limit);
+            pstmt.setInt(2, offset);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                tests = resultSetToTestList(rs);
+            }
+        }
+        return tests;
     }
 
     @Override
@@ -476,8 +577,17 @@ public class DBHandler implements DBHandlerInterface {
     }
 
     @Override
-    public List<Question> getQuestions(int testId, int offset, int limit) throws SQLException {
-        return null;
+    public List<Question> getQuestions(int testId, int limit, int offset) throws SQLException {
+        List<Question> questions;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_QUESTIONS)) {
+            pstmt.setInt(1, testId);
+            pstmt.setInt(2, limit);
+            pstmt.setInt(3, offset);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                questions = resultSetToQuestionList(rs);
+            }
+        }
+        return questions;
     }
 
     @Override
@@ -533,7 +643,7 @@ public class DBHandler implements DBHandlerInterface {
     @Override
     public Answer getAnswer(int id) throws SQLException {
         Answer answer = new Answer(id);
-        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_QUESTION,
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_ANSWER,
                 ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
             pstmt.setInt(1, id);
             try (ResultSet resultSet = pstmt.executeQuery()) {
@@ -553,8 +663,17 @@ public class DBHandler implements DBHandlerInterface {
     }
 
     @Override
-    public List<Answer> getAnswers(int testId, int offset, int limit) throws SQLException {
-        return null;
+    public List<Answer> getAnswers(int questionId, int limit, int offset) throws SQLException {
+        List<Answer> answers;
+        try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_ANSWERS)) {
+            pstmt.setInt(1, questionId);
+            pstmt.setInt(2, limit);
+            pstmt.setInt(3, offset);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                answers = resultSetToAnswerList(rs);
+            }
+        }
+        return answers;
     }
 
     @Override
@@ -639,5 +758,97 @@ public class DBHandler implements DBHandlerInterface {
             throw new SQLException(e.getMessage());
         }
         return res;
+    }
+
+    /**
+     * Converts a result set after sql request to a list with Users
+     * @param rs - ResultSet
+     * @return List (User)
+     * @throws SQLException - when an SQL error occurs
+     */
+    private List<User> resultSetToUserList(ResultSet rs) throws SQLException {
+        List<User> res = new ArrayList<>();
+        while (rs.next()) {
+            String login = rs.getString("login");
+            User user = new User(login);
+            user.setId(rs.getInt("id"));
+            user.setPassword(rs.getString("password"));
+            user.setName(rs.getString("name"));
+            user.setRole(Role.valueOf(rs.getString("role").toUpperCase()));
+            user.setStatus(Status.valueOf(rs.getString("status").toUpperCase()));
+            res.add(user);
+        }
+        return res;
+    }
+
+    /**
+     * Converts a result set after sql request to a list with Tests
+     * @param rs - ResultSet
+     * @return List (Test)
+     * @throws SQLException - when an SQL error occurs
+     */
+    private List<Test> resultSetToTestList(ResultSet rs) throws SQLException {
+        List<Test> res = new ArrayList<>();
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            Test test = new Test(id);
+            test.setName(rs.getString("name"));
+            test.setSubject(rs.getString("subject"));
+            test.setDifficulty(rs.getInt("difficulty"));
+            test.setTime(rs.getString("time"));
+            test.setQueries(rs.getInt("queries"));
+            res.add(test);
+        }
+        return res;
+    }
+
+    /**
+     * Converts a result set after sql request to a list with Questions
+     * @param rs - ResultSet
+     * @return List (Question)
+     * @throws SQLException - when an SQL error occurs
+     */
+    private List<Question> resultSetToQuestionList(ResultSet rs) throws SQLException {
+        List<Question> res = new ArrayList<>();
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            Question question = new Question(id);
+            question.setStr(rs.getString("string"));
+            res.add(question);
+        }
+        return res;
+    }
+
+    /**
+     * Converts a result set after sql request to a list with Answers
+     * @param rs - ResultSet
+     * @return List (Answer)
+     * @throws SQLException - when an SQL error occurs
+     */
+    private List<Answer> resultSetToAnswerList(ResultSet rs) throws SQLException {
+        List<Answer> res = new ArrayList<>();
+        while (rs.next()) {
+            int id = rs.getInt("id");
+            Answer answer = new Answer(id);
+            answer.setStr(rs.getString("string"));
+            res.add(answer);
+        }
+        return res;
+    }
+
+    /**
+     * Converts a result set after sql request to a map with test name and user's result
+     * @param rs - ResultSet
+     * @return Map (String, Double)
+     * @throws SQLException - when an SQL error occurs
+     */
+    private Map<String, Double> resultSetToMap(ResultSet rs) throws SQLException {
+        Map<String, Double> testWithResults = new HashMap<>();
+        while(rs.next()) {
+            String testName = rs.getString("name");
+            double result = rs.getDouble("result");
+            testWithResults.put(testName, result);
+        }
+        return testWithResults;
     }
 }
