@@ -1,26 +1,33 @@
+<%@ page language="java" contentType="text/html; charset=utf-8"
+         pageEncoding="utf-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<c:choose>
+    <c:when test="${locale == 'ua'}">
+        <fmt:setLocale value="ua"/>
+    </c:when>
+    <c:otherwise>
+        <fmt:setLocale value="en"/>
+    </c:otherwise>
+</c:choose>
+
 <html>
-
-<head>
-    <title> Testing Web App </title>
-</head>
-
 <body>
+<div class="main_page">
 
-<div>
-    <tr>How to Use?</tr>
-    <tr>Contacts</tr>
-    <tr>About us</tr>
-    <hr>
+    <form action="/Testing/register.jsp">
+        <button class = "index_buttons" type="submit">
+            Register
+        </button>
+    </form>
+
+    <form action="/Testing/login.jsp">
+        <button class = "index_buttons" type="submit">
+            Login
+        </button>
+    </form>
+
 </div>
-
-<form action="/calc" target="_blank" method="post">
-    <label for="fname">x:</label><br>
-    <input type="text" id="fname" name="x" value="20"><br>
-    <label for="lname">y:</label><br>
-    <input type="text" id="lname" name="y" value="30"><br><br>
-    <input type="submit" value="Submit">
-    <input type="text" id="sum" name="sum:" value=x+y><br>
-</form>
-
 </body>
 </html>

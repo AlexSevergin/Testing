@@ -1,7 +1,7 @@
 package database.dbhandler;
 
+import database.connection_pool.HikariCP;
 import entities.answer.Answer;
-import database.connection_pool.Pool;
 import entities.user.Role;
 import org.apache.log4j.Logger;
 import entities.question.Question;
@@ -28,17 +28,22 @@ public class DBHandler implements DBHandlerInterface {
     private static Connection connection;
 
     {
-        init();
+        try {
+            init();
+        } catch (SQLException e) {
+            LOG.error("Error in DBHandler while initializing HikariCP connection pool", e);
+            e.printStackTrace();
+        }
     }
 
     /**
      * Gets connection from Pool
      */
-    private static Connection getConnection() {
-        return Pool.getInstance().getConnection();
+    private static Connection getConnection() throws SQLException {
+        return HikariCP.getConnection();
     }
 
-    private void init() {
+    private void init() throws SQLException {
         connection = getConnection();
         try {
             connection.prepareStatement(SqlRequests.USE).execute();
@@ -50,7 +55,7 @@ public class DBHandler implements DBHandlerInterface {
 
     public static DBHandler getInstance() {
         if (INSTANCE == null)
-            synchronized (Pool.class) {
+            synchronized (HikariCP.class) {
                 if (INSTANCE == null) {
                     INSTANCE = new DBHandler();
                 }
@@ -133,13 +138,14 @@ public class DBHandler implements DBHandlerInterface {
 
     @Override
     public User getUser(String login) throws LoginException {
-        User user = new User(login);
+        User user;
         try (PreparedStatement pstmt = connection.prepareStatement(SqlRequests.GET_USER_BY_LOGIN,
                 ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY)) {
             pstmt.setString(1, login);
             try (ResultSet resultSet = pstmt.executeQuery()) {
                 boolean completed = resultSet.first();
                 if (completed) {
+                    user = new User(login);
                     user.setId(resultSet.getInt("id"));
                     user.setPassword(resultSet.getString("password"));
                     user.setName(resultSet.getString("name"));
